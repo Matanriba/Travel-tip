@@ -30,8 +30,9 @@ function getCoordsForLocation(locationName) {
     console.log(locationName)
     return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${locationName}&key=${API_KEY}`)
         .then(res => res.data.results[0].geometry.location)
-        .catch(err => {
-            throw new Error(err)
+        .catch(() => {
+            alert('Cannot find location!!')
+            throw new Error('Cannot find location!!')
         })      
 }
 

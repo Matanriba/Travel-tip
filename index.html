@@ -12,6 +12,7 @@
     <button type="submit">Go!</button>
     </form>
     <button onclick="onGetUserPos()" class="btn-user-pos">My Location</button>
+    <button onclick="onCopyURL()">Copy Location</button>
     <div id="map" style="width: 60%; height: 400px;"></div>
     <button onclick="onAddMarker()" class="btn-add-marker">Add Marker Specific Location</button>
     <button onclick="onGetLocs()" class="btn-get-locs">Get Locations Now!</button>
@@ -19,7 +20,7 @@
 
     <p>You are at: <span class="user-pos"></span></p>
     <p>Locations: <span class="locs"></span></p>
-    <div class="my-locations">
+    <div class="my-locations"> 
         <table>
             <thead>
                 <th>Name</th>

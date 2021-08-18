@@ -7,11 +7,14 @@ window.onPanTo = onPanTo;
 window.onGetLocs = renderLocs;
 window.onGetUserPos = onGetUserPos;
 window.onSearchedLocation = onSearchedLocation;
+window.onCopyURL = onCopyURL;
 window.onAddLoc = onAddLoc;
 
 function onInit() {
     renderLocs()
-    mapService.initMap()
+    let params = new URLSearchParams(window.location.search);
+    if (!params) mapService.initMap()
+    else mapService.initMap(params.lat, params.lng)
         .then(() => {
             console.log('Map is ready');
         })
@@ -24,10 +27,15 @@ function onSearchedLocation(ev) {
     locService.getCoordsForLocation(locationName)
         .then(res => {
             mapService.panTo(res.lat, res.lng)
-            mapService.addMarker({lat: res.lat, lng: res.lng})
+            mapService.addMarker({ lat: res.lat, lng: res.lng })
         })
 }
 
+function onCopyURL() {
+    // getCoords() => coords.lat coords.lng
+    const url = `https://matanriba.github.io/Travel-tip/?lat=asdasd&lng=asdasd`
+    navigator.clipboard.writeText(url);
+}
 
 function onAddMarker() {
     console.log('Adding a marker');
@@ -60,7 +68,7 @@ function onGetUserPos() {
         .then(pos => {
             // console.log('User position is:', pos.coords.latitude, pos.coords.longitude);
             mapService.panTo(pos.coords.latitude, pos.coords.longitude)
-            mapService.addMarker({lat: pos.coords.latitude, lng: pos.coords.longitude})
+            mapService.addMarker({ lat: pos.coords.latitude, lng: pos.coords.longitude })
             // document.querySelector('.user-pos').innerText =
             //     `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
         })
@@ -70,5 +78,6 @@ function onGetUserPos() {
 }
 function onPanTo() {
     console.log('Panning the Map');
+
     mapService.panTo(35.6895, 139.6917);
 }
