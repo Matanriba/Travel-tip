@@ -7,10 +7,13 @@ window.onSearchedLocation = onSearchedLocation;
 window.onMapClicked = onMapClicked;
 window.onGoToLoc = onGoToLoc;
 window.onRemoveLoc = onRemoveLoc;
+window.onCopyURL = onCopyURL;
 
 function onInit() {
     renderLocs()
-    mapService.initMap()
+    let params = new URLSearchParams(window.location.search);
+    if (!params) mapService.initMap()
+    else mapService.initMap(params.lat, params.lng)
         .then(() => {
             console.log('Map is ready');
         })
@@ -41,6 +44,12 @@ function onGetUserPos() {
         .catch(err => {
             console.log('err!!!', err);
         })
+}
+
+function onCopyURL() {
+    // getCoords() => coords.lat coords.lng
+    const url = `https://matanriba.github.io/Travel-tip/?lat=asdasd&lng=asdasd`
+    navigator.clipboard.writeText(url);
 }
 
 function onMapClicked() {
