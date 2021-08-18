@@ -8,20 +8,31 @@ window.onMapClicked = onMapClicked;
 window.onGoToLoc = onGoToLoc;
 window.onRemoveLoc = onRemoveLoc;
 window.onCopyURL = onCopyURL;
+window.getInitialLocation = getInitialLocation;
 
 function onInit() {
     renderLocs()
     // let params = new URLSearchParams(window.location.search);
-    let params = (new URL(document.location)).searchParams;
-    let lat = parseInt(params.get('lat')); 
-    let lng = parseInt(params.get('lng')); 
-    console.log('params: ', lat, lng)
-    if (!params) mapService.initMap()
-    else mapService.initMap(params.lat, params.lng)
+    // let params = (new URL(document.location)).searchParams;
+    // let lat = +params.get('lat'); 
+    // let lng = +params.get('lng'); 
+    // console.log('params: ', lat, lng)
+    // if (!params) mapService.initMap()
+    // else mapService.initMap(params.lat, params.lng)
+    getInitialLocation()
         .then(() => {
             console.log('Map is ready');
         })
         .catch(() => console.log('Error: cannot init map'));
+}
+
+function getInitialLocation() {
+    let params = (new URL(document.location)).searchParams;
+    let lat = +params.get('lat');
+    let lng = +params.get('lng');
+    console.log('params: ', lat, lng)
+    if (!params) mapService.initMap()
+    else mapService.initMap(params.lat, params.lng)
 }
 
 function onSearchedLocation(ev) {
