@@ -4,21 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TravelTip</title>
+    <link rel="stylesheet" href="style/main.css">
 </head>
 <body>
-    <h1>Welcome To Our TravelTip!!@!#!</h1>
-    <form onsubmit="onSearchedLocation(event)">
-    <input type="text" name="search-location">
-    <button type="submit">Go!</button>
-    </form>
-    <button onclick="onGetUserPos()" class="btn-user-pos">My Location</button>
-    <button onclick="onCopyURL()">Copy Location</button>
-    <div onclick="onMapClicked()" id="map" style="width: 60%; height: 400px;"></div>
+    <header>
+        <h1>TravelTip</h1>
+        <div>
+            <form onsubmit="onSearchedLocation(event)">
+                <input type="text" name="search-location">
+                <button type="submit">Go!</button>
+                </form>
+                <button onclick="onGetUserPos()" class="btn-user-pos">My Location</button>
+        </div>
+    </header>
 
+    <button onclick="onCopyURL()">Copy Location</button>
+    
+    <div class="main-container">
+        <div onclick="onMapClicked()" id="map" style="width: 60%; height: 400px;"></div>
+        <div class="weather">weather will come here....</div>
+    </div>
+    
     <p class="user-pos" hidden>You are at: <span></span>
         <!-- <button>Add location</button> -->
     </p>
-    <p>Your Locations: <span class="locs"></span></p>
+    <h2>Your Locations: <span class="locs"></span></h2>
     <div class="my-locations">
         <table>
             <thead hidden>

@@ -39,8 +39,9 @@ function onGetUserPos() {
             mapService.panTo(pos.coords.latitude, pos.coords.longitude)
             mapService.addMarker({ lat: pos.coords.latitude, lng: pos.coords.longitude })
             document.querySelector('.user-pos span').innerText =
-                `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+                `Latitude: ${pos.coords.latitude.toFixed(7)} - Longitude: ${pos.coords.longitude.toFixed(7)}`
             document.querySelector('.user-pos').hidden = false
+            locService.setCurrPos({lat: pos.coords.latitude, lng: pos.coords.longitude})
         })
         .catch(err => {
             console.log('err!!!', err);
@@ -50,7 +51,6 @@ function onGetUserPos() {
 function onCopyURL() {
     const currPos = locService.getCurrPos()
     console.log('copyURL pos:', currPos)
-    // getCoords() => coords.lat coords.lng
     const url = `https://matanriba.github.io/Travel-tip/?lat=${currPos.lat}&lng=${currPos.lng}`
     navigator.clipboard.writeText(url);
 }
@@ -86,12 +86,12 @@ function renderLocs() {
 }
 
 function onGoToLoc(locId) {
+    //remove old marker based on currPos
     locService.getLocById(locId)
         .then(loc => {
             mapService.panTo(loc.lat, loc.lng)
             mapService.addMarker({ lat: loc.lat, lng: loc.lng }, loc.name)
         })
-        // .catch(console.log('no loc found by id'))
 }
 
 function onRemoveLoc(locId) {

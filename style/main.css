@@ -1,0 +1,71 @@
+@font-face {
+    font-family: Prompt;
+    src: url(Prompt-Regular.ttf);
+}
+
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+body {
+    background-color: #f68658;
+}
+
+button {
+    cursor: pointer;
+    background-color: #7f7e7f;
+    border: 1px solid #464f6f;
+    color: white;
+    font-size: 1em;
+    padding: 10px;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    font-family: Prompt;
+    letter-spacing: 0.05em;
+}
+
+header form {
+    display: inline-block;
+}
+
+header input {
+    font-size: 1em;
+    height: 2em;
+}
+
+header button {
+    font-size: 1.2em;
+    min-width: 80px
+}
+
+
+.main-container {
+    display: flex;
+    align-items: center;
+}
+
+#map {
+    margin: 10px;
+    width: 65%;
+}
+
+.my-locations table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.my-locations td {
+    padding-inline-end: 7px;
+}
+
+.my-locations button {
+    background-color: rgb(106, 228, 90);
+    color: black;
+}

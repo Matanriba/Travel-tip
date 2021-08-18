@@ -1,7 +1,7 @@
 export const locService = {
     getLocs,
     getCoordsForLocation,
-    getPosition: getUserPosition,
+    getUserPosition,
     addLoc,
     getLocById,
     removeLoc,
