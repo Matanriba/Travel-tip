@@ -11,6 +11,7 @@ var gMap;
 // init coords should be userPosition...
 function initMap(lat = 32.0749831, lng = 34.9120554) {
     console.log('InitMap');
+    locService.setCurrPos({lat, lng})
     return _connectGoogleApi()
         .then(() => {
             console.log('google available');

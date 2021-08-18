@@ -33,7 +33,7 @@ function onSearchedLocation(ev) {
 }
 
 function onGetUserPos() {
-    locService.getPosition()
+    locService.getUserPosition()
         .then(pos => {
             mapService.panTo(pos.coords.latitude, pos.coords.longitude)
             mapService.addMarker({ lat: pos.coords.latitude, lng: pos.coords.longitude })
@@ -47,8 +47,10 @@ function onGetUserPos() {
 }
 
 function onCopyURL() {
+    const currPos = locService.getCurrPos()
+    console.log('copyURL pos:', currPos)
     // getCoords() => coords.lat coords.lng
-    const url = `https://matanriba.github.io/Travel-tip/?lat=asdasd&lng=asdasd`
+    const url = `https://matanriba.github.io/Travel-tip/?lat=${currPos.lat}&lng=${currPos.lng}`
     navigator.clipboard.writeText(url);
 }
 

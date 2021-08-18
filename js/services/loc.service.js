@@ -1,17 +1,20 @@
 export const locService = {
     getLocs,
     getCoordsForLocation,
-    getPosition,
+    getPosition: getUserPosition,
     addLoc,
     getLocById,
-    removeLoc
+    removeLoc,
+    setCurrPos,
+    getCurrPos
 }
 
 import { storageService } from './storage.service.js'
 
 const KEY = 'locsDB';
-let locId = 0;
 const locs = storageService.load(KEY) || [];
+let locId = 0;
+let currPos
 
 function getLocs() {
     return new Promise((resolve, reject) => {
@@ -29,12 +32,12 @@ function getCoordsForLocation(locationName) {
         .catch(() => {
             // alert('Cannot find location!!')
             throw new Error('Cannot find location!!')
-        })      
+        })
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
 
-function getPosition() {
+function getUserPosition() {
     console.log('Getting Pos');
     return new Promise((resolve, reject) => {
         navigator.geolocation.getCurrentPosition(resolve, reject)
@@ -42,19 +45,34 @@ function getPosition() {
 }
 
 function addLoc(name, pos, weather) {
-    locs.push({
+    const loc = {
         id: ++locId, name, lat: pos.lat, lng: pos.lng,
         weather, createdAt: Date.now(), updatedAt: Date.now()
-    })
+    }
+    currPos = { lat: loc.lat, lng: loc.lng }
+    console.log('curPos:', currPos)
+    locs.push(loc)
     storageService.save(KEY, locs)
 }
 
 function getLocById(locId) {
-    return Promise.resolve(locs.find(loc => loc.id === locId))
+    const loc = locs.find(loc => loc.id === locId)
+    currPos = { lat: loc.lat, lng: loc.lng }
+    console.log('curPos:', currPos)
+    return Promise.resolve(loc)
 }
 
 function removeLoc(locId) {
     const locIdx = locs.findIndex(loc => loc.id === locId)
     locs.splice(locIdx, 1)
     storageService.save(KEY, locs)
+}
+
+function setCurrPos(pos) {
+    currPos = pos
+    console.log('curPos:', currPos)
+}
+
+function getCurrPos(){
+    return currPos
 }
