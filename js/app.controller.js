@@ -13,7 +13,9 @@ function onInit() {
     renderLocs()
     // let params = new URLSearchParams(window.location.search);
     let params = (new URL(document.location)).searchParams;
-    console.log('params: ', params)
+    let lat = parseInt(params.get('lat')); 
+    let lng = parseInt(params.get('lng')); 
+    console.log('params: ', lat, lng)
     if (!params) mapService.initMap()
     else mapService.initMap(params.lat, params.lng)
         .then(() => {
@@ -42,7 +44,7 @@ function onGetUserPos() {
             document.querySelector('.user-pos span').innerText =
                 `Latitude: ${pos.coords.latitude.toFixed(7)} - Longitude: ${pos.coords.longitude.toFixed(7)}`
             document.querySelector('.user-pos').hidden = false
-            locService.setCurrPos({lat: pos.coords.latitude, lng: pos.coords.longitude})
+            locService.setCurrPos({ lat: pos.coords.latitude, lng: pos.coords.longitude })
         })
         .catch(err => {
             console.log('err!!!', err);
