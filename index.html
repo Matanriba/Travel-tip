@@ -12,22 +12,21 @@
     <button type="submit">Go!</button>
     </form>
     <button onclick="onGetUserPos()" class="btn-user-pos">My Location</button>
-    <div id="map" style="width: 60%; height: 400px;"></div>
-    <button onclick="onAddMarker()" class="btn-add-marker">Add Marker Specific Location</button>
-    <button onclick="onGetLocs()" class="btn-get-locs">Get Locations Now!</button>
-    <button onclick="onPanTo()"class="btn-pan">Pan Map to Tokyo</button>
+    <div onclick="onMapClicked()" id="map" style="width: 60%; height: 400px;"></div>
 
-    <p>You are at: <span class="user-pos"></span></p>
-    <p>Locations: <span class="locs"></span></p>
+    <p class="user-pos" hidden>You are at: <span></span>
+        <!-- <button>Add location</button> -->
+    </p>
+    <p>Your Locations: <span class="locs"></span></p>
     <div class="my-locations">
         <table>
-            <thead>
+            <thead hidden>
                 <th>Name</th>
                 <th>Lat</th>
                 <th>Lng</th>
                 <th>Weather</th>
                 <th>Created At</th>
-                <th>Updated At</th>
+                <th colspan="2">Actions</th>  
             </thead>
             <tbody></tbody>
         </table>

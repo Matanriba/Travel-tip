@@ -2,12 +2,11 @@ import { locService } from './services/loc.service.js'
 import { mapService } from './services/map.service.js'
 
 window.onload = onInit;
-window.onAddMarker = onAddMarker;
-window.onPanTo = onPanTo;
-window.onGetLocs = renderLocs;
 window.onGetUserPos = onGetUserPos;
 window.onSearchedLocation = onSearchedLocation;
-window.onAddLoc = onAddLoc;
+window.onMapClicked = onMapClicked;
+window.onGoToLoc = onGoToLoc;
+window.onRemoveLoc = onRemoveLoc;
 
 function onInit() {
     renderLocs()
@@ -24,14 +23,27 @@ function onSearchedLocation(ev) {
     locService.getCoordsForLocation(locationName)
         .then(res => {
             mapService.panTo(res.lat, res.lng)
-            mapService.addMarker({lat: res.lat, lng: res.lng})
+            mapService.addMarker({ lat: res.lat, lng: res.lng }, locationName)
+            locService.addLoc(locationName, res, 'weather here')
+            renderLocs()
         })
 }
 
+function onGetUserPos() {
+    locService.getPosition()
+        .then(pos => {
+            mapService.panTo(pos.coords.latitude, pos.coords.longitude)
+            mapService.addMarker({ lat: pos.coords.latitude, lng: pos.coords.longitude })
+            document.querySelector('.user-pos span').innerText =
+                `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+            document.querySelector('.user-pos').hidden = false
+        })
+        .catch(err => {
+            console.log('err!!!', err);
+        })
+}
 
-function onAddMarker() {
-    console.log('Adding a marker');
-    // mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 });
+function onMapClicked() {
     renderLocs()
 }
 
@@ -39,36 +51,38 @@ function renderLocs() {
     locService.getLocs()
         .then(locs => {
             console.log('Locations:', locs)
-            const strHtml = locs.map(loc => {
-                return `
+            let strHtml
+            if (locs.length) {
+                strHtml = locs.map(loc => {
+                    return `
                     <tr>
                         <td>${loc.name}</td>
-                        <td>${loc.lat}</td>
-                        <td>${loc.lng}</td>
+                        <td>${loc.lat.toFixed(7)}</td>
+                        <td>${loc.lng.toFixed(7)}</td>
                         <td>${loc.weather}</td>
-                        <td>${loc.createdAt}</td>
-                        <td>${loc.updatedAt}</td>
-                    </tr>
-                `
-            }).join('')
+                        <td>${new Date(loc.createdAt).toUTCString()}</td>
+                        <td><button onclick="onGoToLoc(${loc.id})">Go</button></td>
+                        <td><button onclick="onRemoveLoc(${loc.id})">Delete</button></td>
+                        </tr>
+                        `
+                }).join('')
+                document.querySelector('.my-locations thead').hidden = false
+
+            } else strHtml = 'no locations yet'
             document.querySelector('.my-locations tbody').innerHTML = strHtml
         })
 }
 
-function onGetUserPos() {
-    locService.getPosition()
-        .then(pos => {
-            // console.log('User position is:', pos.coords.latitude, pos.coords.longitude);
-            mapService.panTo(pos.coords.latitude, pos.coords.longitude)
-            mapService.addMarker({lat: pos.coords.latitude, lng: pos.coords.longitude})
-            // document.querySelector('.user-pos').innerText =
-            //     `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+function onGoToLoc(locId) {
+    locService.getLocById(locId)
+        .then(loc => {
+            mapService.panTo(loc.lat, loc.lng)
+            mapService.addMarker({ lat: loc.lat, lng: loc.lng }, loc.name)
         })
-        .catch(err => {
-            console.log('err!!!', err);
-        })
+        // .catch(console.log('no loc found by id'))
 }
-function onPanTo() {
-    console.log('Panning the Map');
-    mapService.panTo(35.6895, 139.6917);
+
+function onRemoveLoc(locId) {
+    locService.removeLoc(locId)
+    renderLocs()
 }

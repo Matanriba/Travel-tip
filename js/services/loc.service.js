@@ -2,26 +2,22 @@ export const locService = {
     getLocs,
     getCoordsForLocation,
     getPosition,
-    addLoc
+    addLoc,
+    getLocById,
+    removeLoc
 }
 
 import { storageService } from './storage.service.js'
 
 const KEY = 'locsDB';
 let locId = 0;
-
-let locs = storageService.load(KEY) || [];
-if (!locs.length) {
-    addLoc('Tel Mond', 32.256819, 34.917581, 'hot 🥵 32C')
-    // this should be addLoc(userPosition)
-}
-storageService.save(KEY, locs)
+const locs = storageService.load(KEY) || [];
 
 function getLocs() {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             resolve(locs);
-        }, 2000)
+        }, 500)
     });
 }
 
@@ -32,7 +28,7 @@ function getCoordsForLocation(locationName) {
         .then(res => res.data.results[0].geometry.location)
         .catch(err => {
             throw new Error(err)
-        })      
+        })
 }
 
 // This function provides a Promise API to the callback-based-api of getCurrentPosition
@@ -44,11 +40,20 @@ function getPosition() {
     })
 }
 
-function addLoc(name, lat, lng, weather) {
+function addLoc(name, pos, weather) {
     locs.push({
-        id: ++locId, name, lat, lng,
+        id: ++locId, name, lat: pos.lat, lng: pos.lng,
         weather, createdAt: Date.now(), updatedAt: Date.now()
     })
-    console.log('locs:', locs)
+    storageService.save(KEY, locs)
+}
+
+function getLocById(locId) {
+    return Promise.resolve(locs.find(loc => loc.id === locId))
+}
+
+function removeLoc(locId) {
+    const locIdx = locs.findIndex(loc => loc.id === locId)
+    locs.splice(locIdx, 1)
     storageService.save(KEY, locs)
 }

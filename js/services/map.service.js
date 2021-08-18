@@ -4,7 +4,7 @@ export const mapService = {
     panTo
 }
 
-import {locService} from './loc.service.js'
+import { locService } from './loc.service.js'
 
 var gMap;
 
@@ -29,8 +29,10 @@ function addMapClickHandler() {
         const clickedPos = mapsMouseEvent.latLng.toJSON()
         console.log('clicked pos:', clickedPos)
         const name = prompt('location name?')
-        addMarker(clickedPos, name)
-        locService.addLoc(name, clickedPos.lat, clickedPos.lng, 'weather will come here')
+        if (name) {
+            addMarker(clickedPos, name)
+            locService.addLoc(name, clickedPos, 'weather will come here')
+        }
     })
 }
 
