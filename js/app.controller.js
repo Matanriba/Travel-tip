@@ -6,6 +6,7 @@ window.onAddMarker = onAddMarker;
 window.onPanTo = onPanTo;
 window.onGetLocs = onGetLocs;
 window.onGetUserPos = onGetUserPos;
+window.onSearchedLocation = onSearchedLocation;
 
 function onInit() {
     mapService.initMap()
@@ -15,13 +16,17 @@ function onInit() {
         .catch(() => console.log('Error: cannot init map'));
 }
 
-// This function provides a Promise API to the callback-based-api of getCurrentPosition
-function getPosition() {
-    console.log('Getting Pos');
-    return new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject)
-    })
+function onSearchedLocation(ev) {
+    ev.preventDefault();
+    const locationName = document.querySelector('[name=search-location]').value
+    locService.getCoordsForLocation(locationName)
+        .then(res => {
+            mapService.panTo(res.lat, res.lng)
+            mapService.addMarker({lat: res.lat, lng: res.lng})
+        })
 }
+
+// This function provides a Promise API to the callback-based-api of getCurrentPosition
 
 function onAddMarker() {
     console.log('Adding a marker');
@@ -37,11 +42,13 @@ function onGetLocs() {
 }
 
 function onGetUserPos() {
-    getPosition()
+    locService.getPosition()
         .then(pos => {
-            console.log('User position is:', pos.coords);
-            document.querySelector('.user-pos').innerText =
-                `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
+            // console.log('User position is:', pos.coords.latitude, pos.coords.longitude);
+            mapService.panTo(pos.coords.latitude, pos.coords.longitude)
+            mapService.addMarker({lat: pos.coords.latitude, lng: pos.coords.longitude})
+            // document.querySelector('.user-pos').innerText =
+            //     `Latitude: ${pos.coords.latitude} - Longitude: ${pos.coords.longitude}`
         })
         .catch(err => {
             console.log('err!!!', err);

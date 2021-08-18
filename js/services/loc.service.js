@@ -1,5 +1,7 @@
 export const locService = {
-    getLocs
+    getLocs,
+    getCoordsForLocation,
+    getPosition
 }
 
 
@@ -16,4 +18,19 @@ function getLocs() {
     });
 }
 
+function getCoordsForLocation(locationName) {
+    const API_KEY = 'AIzaSyAv0z0kluHOlPZ3wjET1G7VByf9cI24UIY';
+    console.log(locationName)
+    return axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${locationName}&key=${API_KEY}`)
+        .then(res => res.data.results[0].geometry.location)
+        .catch(err => {
+            throw new Error(err)
+        })      
+}
 
+function getPosition() {
+    console.log('Getting Pos');
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject)
+    })
+}
