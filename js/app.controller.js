@@ -12,6 +12,7 @@ window.onCopyURL = onCopyURL;
 function onInit() {
     renderLocs()
     let params = new URLSearchParams(window.location.search);
+    console.log('params: ', params)
     if (!params) mapService.initMap()
     else mapService.initMap(params.lat, params.lng)
         .then(() => {
