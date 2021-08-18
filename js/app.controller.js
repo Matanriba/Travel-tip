@@ -12,6 +12,7 @@ window.onCopyURL = onCopyURL;
 function onInit() {
     renderLocs()
     let params = new URLSearchParams(window.location.search);
+    console.log('params: ', params)
     if (!params) mapService.initMap()
     else mapService.initMap(params.lat, params.lng)
         .then(() => {
@@ -48,8 +49,8 @@ function onGetUserPos() {
 
 function onCopyURL() {
     // getCoords() => coords.lat coords.lng
-    const url = `https://matanriba.github.io/Travel-tip/?lat=asdasd&lng=asdasd`
-    navigator.clipboard.writeText(url);
+        const url = `https://matanriba.github.io/Travel-tip/?lat=pos.coords.latitude&lng=pos.coords.longitude`
+        navigator.clipboard.writeText(url);
 }
 
 function onMapClicked() {
