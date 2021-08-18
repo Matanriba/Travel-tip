@@ -11,7 +11,8 @@ window.onCopyURL = onCopyURL;
 
 function onInit() {
     renderLocs()
-    let params = new URLSearchParams(window.location.search);
+    // let params = new URLSearchParams(window.location.search);
+    let params = new URLSearchParams(document.location.search.substring(1));
     console.log('params: ', params)
     if (!params) mapService.initMap()
     else mapService.initMap(params.lat, params.lng)
@@ -50,8 +51,10 @@ function onGetUserPos() {
 
 function onCopyURL() {
     const currPos = locService.getCurrPos()
-    console.log('copyURL pos:', currPos)
-    const url = `https://matanriba.github.io/Travel-tip/?lat=${currPos.lat}&lng=${currPos.lng}`
+    const lat = currPos.lat
+    const lng = currPos.lng
+    console.log('copyURL pos:', lat, lng)
+    const url = `https://matanriba.github.io/Travel-tip/?lat=${lat}&lng=${lng}`
     navigator.clipboard.writeText(url);
 }
 
