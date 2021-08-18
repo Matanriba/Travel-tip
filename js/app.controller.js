@@ -31,8 +31,7 @@ function getInitialLocation() {
     let lat = +params.get('lat');
     let lng = +params.get('lng');
     console.log('params: ', lat, lng)
-    if (!params) mapService.initMap()
-    else mapService.initMap(params.lat, params.lng)
+    mapService.initMap(lat, lng)
 }
 
 function onSearchedLocation(ev) {
