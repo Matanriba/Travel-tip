@@ -1,12 +1,19 @@
 export const locService = {
-    getLocs
+    getLocs,
+    addLoc
 }
 
+import { storageService } from './storage.service.js'
 
-const locs = [
-    { name: 'Greatplace', lat: 32.047104, lng: 34.832384 }, 
-    { name: 'Neveragain', lat: 32.047201, lng: 34.832581 }
-]
+const KEY = 'locsDB';
+let locId = 0;
+
+let locs = storageService.load(KEY) || [];
+if (!locs.length) {
+    addLoc('Tel Mond', 32.256819, 34.917581, 'hot 🥵 32C')
+    // this should be addLoc(userPosition)
+}
+storageService.save(KEY, locs)
 
 function getLocs() {
     return new Promise((resolve, reject) => {
@@ -16,4 +23,11 @@ function getLocs() {
     });
 }
 
-
+function addLoc(name, lat, lng, weather) {
+    locs.push({
+        id: ++locId, name, lat, lng,
+        weather, createdAt: Date.now(), updatedAt: Date.now()
+    })
+    console.log('locs:', locs)
+    storageService.save(KEY, locs)
+}
