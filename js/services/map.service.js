@@ -1,13 +1,14 @@
-
-
 export const mapService = {
     initMap,
     addMarker,
     panTo
 }
 
+import {locService} from './loc.service.js'
+
 var gMap;
 
+// init coords should be userPosition...
 function initMap(lat = 32.0749831, lng = 34.9120554) {
     console.log('InitMap');
     return _connectGoogleApi()
@@ -19,14 +20,25 @@ function initMap(lat = 32.0749831, lng = 34.9120554) {
                 zoom: 15
             })
             console.log('Map!', gMap);
+            addMapClickHandler()
         })
 }
 
-function addMarker(loc) {
+function addMapClickHandler() {
+    gMap.addListener("click", (mapsMouseEvent) => {
+        const clickedPos = mapsMouseEvent.latLng.toJSON()
+        console.log('clicked pos:', clickedPos)
+        const name = prompt('location name?')
+        addMarker(clickedPos, name)
+        locService.addLoc(name, clickedPos.lat, clickedPos.lng, 'weather will come here')
+    })
+}
+
+function addMarker(loc, title) {
     var marker = new google.maps.Marker({
         position: loc,
         map: gMap,
-        title: 'Hello World!'
+        title
     });
     return marker;
 }
@@ -35,8 +47,6 @@ function panTo(lat, lng) {
     var laLatLng = new google.maps.LatLng(lat, lng);
     gMap.panTo(laLatLng);
 }
-
-
 
 function _connectGoogleApi() {
     if (window.google) return Promise.resolve()

@@ -4,11 +4,13 @@ import { mapService } from './services/map.service.js'
 window.onload = onInit;
 window.onAddMarker = onAddMarker;
 window.onPanTo = onPanTo;
-window.onGetLocs = onGetLocs;
+window.onGetLocs = renderLocs;
 window.onGetUserPos = onGetUserPos;
 window.onSearchedLocation = onSearchedLocation;
+window.onAddLoc = onAddLoc;
 
 function onInit() {
+    renderLocs()
     mapService.initMap()
         .then(() => {
             console.log('Map is ready');
@@ -26,18 +28,30 @@ function onSearchedLocation(ev) {
         })
 }
 
-// This function provides a Promise API to the callback-based-api of getCurrentPosition
 
 function onAddMarker() {
     console.log('Adding a marker');
-    mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 });
+    // mapService.addMarker({ lat: 32.0749831, lng: 34.9120554 });
+    renderLocs()
 }
 
-function onGetLocs() {
+function renderLocs() {
     locService.getLocs()
         .then(locs => {
             console.log('Locations:', locs)
-            document.querySelector('.locs').innerText = JSON.stringify(locs)
+            const strHtml = locs.map(loc => {
+                return `
+                    <tr>
+                        <td>${loc.name}</td>
+                        <td>${loc.lat}</td>
+                        <td>${loc.lng}</td>
+                        <td>${loc.weather}</td>
+                        <td>${loc.createdAt}</td>
+                        <td>${loc.updatedAt}</td>
+                    </tr>
+                `
+            }).join('')
+            document.querySelector('.my-locations tbody').innerHTML = strHtml
         })
 }
 
